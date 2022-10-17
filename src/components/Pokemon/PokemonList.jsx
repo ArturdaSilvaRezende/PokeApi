@@ -25,7 +25,7 @@ const PokemonList = () => {
   const [filteredResults, setFilteredResults] = useState([]);
 
   //state responsible for the debounce the search field
-  const [value] = useDebounce(searchInput, 500);
+  const [value] = useDebounce(searchInput, 50);
 
   const handleSearch = useCallback(
     (e) => {
@@ -60,7 +60,7 @@ const PokemonList = () => {
           placeholder="Pesquisar"
           onChange={(event) => handleSearch(event.target.value)}
         />
-        <button>
+        <button type="button">
           <img src={Pokeball} alt="pokeball" />
         </button>
       </form>
