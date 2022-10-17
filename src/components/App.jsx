@@ -1,13 +1,13 @@
 import React from "react";
 
 //components
-import AllPokemon from "./Pokemon/Pokemon";
+import PokemonApp from "./Pokemon/Pokemon";
 import BtnBackToTop from "./BtnBackToTop/BtnBackToTop";
 
-const App = (props) => {
+const App = () => {
   return (
     <>
-      <AllPokemon itemsPerPage={4} />
+      <PokemonApp />
       <BtnBackToTop />
     </>
   );

@@ -7,4 +7,8 @@ export const ComponentBtn = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+
+  @media screen and (max-width: 767px) {
+    right: 5px;
+  }
 `;

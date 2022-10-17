@@ -1,7 +1,10 @@
 import React from "react";
 
+//custom styled
+import * as C from "./PokemonStyle";
+
 const PokemonCard = (props) => (
-  <figure className="pokemon-list__card">
+  <C.PokemonCard>
     <a
       href={`https://www.pokemon.com/us/pokedex/${props.name}`}
       target="_blank"
@@ -17,7 +20,7 @@ const PokemonCard = (props) => (
         <h3>{props.name}</h3>
       </figcaption>
     </a>
-  </figure>
+  </C.PokemonCard>
 );
 
 export default PokemonCard;

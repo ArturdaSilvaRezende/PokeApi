@@ -39,3 +39,7 @@ h3 {
   background: #fdc35f;
   border-radius: 10px;
 }
+
+.active {
+  background-color: #fff !important;
+}
