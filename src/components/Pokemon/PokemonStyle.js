@@ -56,8 +56,9 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 230px);
   justify-content: center;
-  margin-top: 6%;
+  margin: 6% auto 0 auto;
   gap: 20px;
+  overflow-x: hidden;
 
   @media screen and (min-width: 600px) and (max-width: 767px) {
     grid-template-columns: 1fr 1fr;
@@ -151,15 +152,19 @@ export const PokemonCard = styled.figure`
   }
 `;
 
-export const PokemonPagination = styled.section``;
+export const PokemonPagination = styled.section`
+  display: flex;
+  flex-direction: column;
+`;
 
 export const PokemonButtons = styled.div`
-  width: 60%;
+  width: 60vw;
   margin: 40px auto;
+  text-align: center;
 
   button {
     background-color: #fdc35f;
-    width: 45px;
+    width: 40px;
     padding: 5px;
     margin: 5px 5px 5px 0;
     border: 1px solid #000;

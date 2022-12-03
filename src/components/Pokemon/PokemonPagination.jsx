@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //services
 import { getPokemons } from "../../services/PokeApi";
@@ -9,16 +9,59 @@ import * as C from "./PokemonStyle";
 
 const PokemonPagination = () => {
   const [pokemons, setPokemons] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 15;
+  const [currentPage, setcurrentPage] = useState(1);
+  const [itemsPerPage] = useState(15);
 
-  const pages = Math.ceil(500 / itemsPerPage);
+  const [pageNumberLimit] = useState(5);
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(5);
+  const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
+
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
-  const handlePages = useCallback((updatePage) => {
-    setCurrentPage(updatePage);
-  }, []);
+  const pages = [];
+  for (let i = 1; i <= Math.ceil(500 / itemsPerPage); i++) {
+    pages.push(i);
+  }
+
+  const handlePages = (event) => {
+    setcurrentPage(Number(event.target.value));
+  };
+
+  const renderPageNumbers = pages.map((number) => {
+    if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
+      return (
+        <button
+          key={number}
+          value={number}
+          onClick={handlePages}
+          className={currentPage === number ? "active" : null}
+        >
+          {number}
+        </button>
+      );
+    } else {
+      return null;
+    }
+  });
+
+  const handleNextbtn = () => {
+    setcurrentPage(currentPage + 1);
+
+    if (currentPage + 1 > maxPageNumberLimit) {
+      setmaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
+      setminPageNumberLimit(minPageNumberLimit + pageNumberLimit);
+    }
+  };
+
+  const handlePrevbtn = () => {
+    setcurrentPage(currentPage - 1);
+
+    if ((currentPage - 1) % pageNumberLimit === 0) {
+      setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
+      setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
+    }
+  };
 
   useEffect(() => {
     getPokemons().then((data) => {
@@ -39,27 +82,17 @@ const PokemonPagination = () => {
 
       <C.PokemonButtons>
         <button
-          onClick={() => handlePages(currentPage - 1)}
-          disabled={currentPage < 1}
+          onClick={handlePrevbtn}
+          disabled={currentPage === pages[0] ? true : false}
         >
           Prev
         </button>
 
-        {Array.from(Array(pages), (item, index) => {
-          return (
-            <button
-              value={index}
-              className={`${index === currentPage ? "active" : null}`}
-              onClick={(e) => setCurrentPage(Number(e.target.value))}
-              key={index}
-            >
-              {index + 1}
-            </button>
-          );
-        })}
+        {renderPageNumbers}
+
         <button
-          onClick={() => handlePages(currentPage + 1)}
-          disabled={currentPage === pages - 1}
+          onClick={handleNextbtn}
+          disabled={currentPage === pages[pages.length - 1] ? true : false}
         >
           Next
         </button>

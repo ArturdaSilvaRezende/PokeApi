@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 
 //services
 import { getPokemons } from "../../services/PokeApi";
-import { useDebounce } from "use-debounce";
 
 //components
 import PokemonCard from "./PokemonCard";
@@ -24,9 +23,6 @@ const PokemonList = () => {
   //state responsible for receiving data from the search field and filtering the result.
   const [filteredResults, setFilteredResults] = useState([]);
 
-  //state responsible for the debounce the search field
-  const [value] = useDebounce(searchInput, 50);
-
   const handleSearch = useCallback(
     (e) => {
       setSearchInput(e);
@@ -35,7 +31,7 @@ const PokemonList = () => {
           return Object.values(item)
             .join("")
             .toLowerCase()
-            .includes(value.toLowerCase());
+            .includes(searchInput.toLowerCase());
         });
 
         setFilteredResults(filteredData);
@@ -43,7 +39,7 @@ const PokemonList = () => {
         setFilteredResults(pokemons);
       }
     },
-    [pokemons, value, searchInput]
+    [pokemons, searchInput]
   );
 
   useEffect(() => {
@@ -65,17 +61,15 @@ const PokemonList = () => {
         </button>
       </form>
 
-      {searchInput.length > 1 ? (
-        filteredResults.map((pokemon) => {
-          return (
-            <C.Container key={pokemon.name}>
-              <PokemonCard {...pokemon} />;
-            </C.Container>
-          );
-        })
-      ) : (
-        <PokemonPagination />
-      )}
+      <C.Container>
+        {searchInput.length > 1 ? (
+          filteredResults.map((pokemon) => {
+            return <PokemonCard key={pokemon.name} {...pokemon} />;
+          })
+        ) : (
+          <PokemonPagination />
+        )}
+      </C.Container>
     </C.PokemonList>
   );
 };
