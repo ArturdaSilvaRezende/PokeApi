@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 
-//services
-import { getPokemons } from "../../services/PokeApi";
-
 //components
 import PokemonCard from "./PokemonCard";
 import PokemonPagination from "./PokemonPagination";
@@ -23,6 +20,8 @@ const PokemonList = () => {
   //state responsible for receiving data from the search field and filtering the result.
   const [filteredResults, setFilteredResults] = useState([]);
 
+  const [loading, setLoading] = useState(false);
+
   const handleSearch = useCallback(
     (e) => {
       setSearchInput(e);
@@ -34,18 +33,33 @@ const PokemonList = () => {
             .includes(searchInput.toLowerCase());
         });
 
+        setLoading(false);
         setFilteredResults(filteredData);
       } else {
+        setLoading(true);
         setFilteredResults(pokemons);
       }
     },
     [pokemons, searchInput]
   );
 
-  useEffect(() => {
-    getPokemons().then((data) => {
+  const getPokemons = async (props) => {
+    const API = "https://pokeapi.co/api/v2/pokemon?limit=500";
+
+    try {
+      setLoading(true); // Set loading before sending API request
+      const res = await fetch(API);
+      const data = await res.json();
       setPokemons(data);
-    });
+      setLoading(false); // Stop loading
+    } catch (error) {
+      setLoading(false); // Stop loading in case of error
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getPokemons();
   }, []);
 
   return (
@@ -61,15 +75,22 @@ const PokemonList = () => {
         </button>
       </form>
 
-      <C.Container>
-        {searchInput.length > 1 ? (
-          filteredResults.map((pokemon) => {
-            return <PokemonCard key={pokemon.name} {...pokemon} />;
-          })
-        ) : (
-          <PokemonPagination />
-        )}
-      </C.Container>
+      {loading ? (
+        <div class="ring">
+          Loading
+          <span></span>
+        </div>
+      ) : (
+        <C.Container>
+          {searchInput.length > 1 ? (
+            filteredResults.map((pokemon) => {
+              return <PokemonCard key={pokemon.name} {...pokemon} />;
+            })
+          ) : (
+            <PokemonPagination />
+          )}
+        </C.Container>
+      )}
     </C.PokemonList>
   );
 };
